@@ -1,0 +1,174 @@
+{
+    "Map/SizeTest": {
+        "height": 4300,
+        "width": 2
+    },
+    "activeFile": "testlevel2.tmx",
+    "expandedProjectPaths": [
+    ],
+    "file.lastUsedOpenFilter": "All Files (*)",
+    "fileStates": {
+        "": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1.5
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/First_Level (1).tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 1932,
+                "y": 1762
+            }
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/First_Level.tmx": {
+            "scale": 2,
+            "selectedLayer": 5,
+            "viewCenter": {
+                "x": 1563,
+                "y": 1510
+            }
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe Tilesets (REAL with COLISSIONS).tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe Tilesets 2.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe Tilesets.tsx": {
+            "dynamicWrapping": true,
+            "scaleInDock": 1
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe_Tilesets 2.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe_Tilesets.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 4,
+            "scaleInEditor": 4
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe_Tilesets_2.tsx": {
+            "dynamicWrapping": false,
+            "scaleInDock": 4,
+            "scaleInEditor": 5.5
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe_Tilesets_REAL_with_COLISSIONS.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 4
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Second_Level.tmx": {
+            "scale": 8,
+            "selectedLayer": 22,
+            "viewCenter": {
+                "x": 414.375,
+                "y": 6063.5
+            }
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Second_Level.tmx#Floe Tilesets": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Second_Level_dougle_edit.tmx": {
+            "scale": 2,
+            "selectedLayer": 9,
+            "viewCenter": {
+                "x": -409.5,
+                "y": 4051.5
+            }
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Top_Area_Intro.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -51,
+                "y": -189.5
+            }
+        },
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/untitled.tmx": {
+            "scale": 1,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -9,
+                "y": 7
+            }
+        },
+        "C:/Users/Basel/Downloads/Floe Tilesets.tsx": {
+            "scaleInDock": 1
+        },
+        "C:/Users/Basel/Downloads/Top_Area_Intro (1).tmx": {
+            "scale": 1.2105229591836735,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -50.39144407565459,
+                "y": -120.19598545914334
+            }
+        },
+        "C:/Users/Basel/Downloads/Top_Area_Intro.tmx": {
+            "scale": 1.2105229591836735,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": -19.00005268426321,
+                "y": -31.804436014962334
+            }
+        },
+        "RatkingTileset.tsx": {
+            "scaleInDock": 3,
+            "scaleInEditor": 2
+        },
+        "testlevel.tmx": {
+            "scale": 3,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 700.6666666666666,
+                "y": 1026.3333333333333
+            }
+        },
+        "testlevel2.tmx": {
+            "scale": 2,
+            "selectedLayer": 1,
+            "viewCenter": {
+                "x": 1139,
+                "y": 559.5
+            }
+        },
+        "testlevel3.tmx": {
+            "scale": 2,
+            "selectedLayer": 0,
+            "viewCenter": {
+                "x": 7923,
+                "y": 8318
+            }
+        }
+    },
+    "frame.defaultDuration": 300,
+    "last.externalTilesetPath": "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled",
+    "last.imagePath": "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/LDJam 50/Assets/Tiled",
+    "map.height": 1000,
+    "map.lastUsedFormat": "tmx",
+    "map.tileHeight": 16,
+    "map.tileWidth": 16,
+    "map.width": 1000,
+    "openFiles": [
+        "RatkingTileset.tsx",
+        "testlevel2.tmx"
+    ],
+    "project": "Ratking.tiled-project",
+    "recentFiles": [
+        "RatkingTileset.tsx",
+        "testlevel2.tmx",
+        "testlevel.tmx",
+        "testlevel3.tmx",
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe_Tilesets_REAL_with_COLISSIONS.tsx",
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe_Tilesets_2.tsx",
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Floe_Tilesets.tsx",
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Second_Level.tmx",
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Top_Area_Intro.tmx",
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/First_Level.tmx",
+        "C:/Users/Basel/Documents/_ACTIVE UNITY PROJECTS/RogueMoon/Assets/Tiled/Second_Level_dougle_edit.tmx",
+        "C:/Users/Basel/Downloads/Top_Area_Intro (1).tmx"
+    ],
+    "tileset.lastUsedFilter": "Tiled tileset files (*.tsx *.xml)",
+    "tileset.lastUsedFormat": "tsx",
+    "tileset.tileSize": {
+        "height": 16,
+        "width": 16
+    }
+}

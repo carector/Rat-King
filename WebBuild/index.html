@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Unity WebGL Player | Rat King</title>
+  </head>
+  <body style="text-align: center">
+    <canvas id="unity-canvas" width=1024 height=720 style="width: 1024px; height: 720px; background: #231F20"></canvas>
+    <script src="Build/WEB.loader.js"></script>
+    <script>
+      createUnityInstance(document.querySelector("#unity-canvas"), {
+        dataUrl: "Build/WEB.data.br",
+        frameworkUrl: "Build/WEB.framework.js.br",
+        codeUrl: "Build/WEB.wasm.br",
+        streamingAssetsUrl: "StreamingAssets",
+        companyName: "The Mountain",
+        productName: "Rat King",
+        productVersion: "1.0",
+        // matchWebGLToCanvasSize: false, // Uncomment this to separately control WebGL canvas render size and DOM element size.
+        // devicePixelRatio: 1, // Uncomment this to override low DPI rendering on high DPI displays.
+      });
+    </script>
+  </body>
+</html>

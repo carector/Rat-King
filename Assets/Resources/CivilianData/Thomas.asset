@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 78f59878fb8c2504eb1ae8eb73936471, type: 3}
+  m_Name: Thomas
+  m_EditorClassIdentifier: 
+  civilianName: Thomas
+  baseSprite: {fileID: 484245614902132370, guid: 9d4671ab4843b464e9e13d0f568c4ad3, type: 3}
+  shirt: {fileID: 0}
+  hat: {fileID: 0}
+  pants: {fileID: 0}

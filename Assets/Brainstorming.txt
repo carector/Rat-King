@@ -1,0 +1,48 @@
+RAT KING
+- Cultist who has to keep making sacrifices to some eldritch entity
+	- Cultist runs FAST
+	- Stuff innocent people into a stack
+		- Sack can be thrown - weight puzzles, pressure plates
+		- Having more people in your sack slows you down more
+		
+	- Have to run down stairs to reach sacrifice room - sense of urgency
+	- Center sacrifice room that levels are built around
+	- Picky about sacrifices - has a target / menu of targets to obtain, certain characteristics to look for
+	- 
+
+
+MAIN MECHANICS
+- Tie-in to main theme
+  - Must sacrifice people to rat king to prevent invasion of evil rat people
+  - As game progresses and you sacrifice more people, show fewer and fewer "innocent" civilians
+  - Suggests that you'll eventually run out of sacrifices and you're DELAYING THE INEVITABLE invasion of rat people
+  - Big visual indicators as you progress through levels
+
+- Sacrifices
+  - At the start of each level, rat king requests certain people as sacrifices
+  - On a timer to sacrifice everyone on the menu
+  - IF WE HAVE TIME: Timer could be vague and only shown by parallax + HUD element, adds to sense of urgency
+    - Just use simple text popup for time being
+  - Can have certain characteristics or can be a specific person
+  - Sacrificing the wrong person can give you a time penalty
+
+- Levels
+  - Sacrifice chamber is the center of each level
+  - Rest of the level (city) expands out around that
+  - Ideally levels are pretty short and plentiful
+
+- Sack
+  - Can hold 3 citizens at once
+  - Grab people automatically
+  - Sack gets heavier with more citizens - slows you down
+  - Weight of sack can help solve puzzles
+    - Break through certain walls with heavier sacks
+    - Pressure plates that can only be activated by sacks enough people in them
+  - Holding the sack can garner suspicion from cops - if you get busted you're done for
+  - Hold left mouse: Aim and throw bag (can't throw empty bag)
+    - Yoshi's Island style tracking
+
+- Movement
+  - Fast and frantic movement speed
+  - No health: one-hit-kills, shitty little cultist man
+  - 
