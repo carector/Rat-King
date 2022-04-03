@@ -143,7 +143,7 @@ public class PlayerController : MonoBehaviour
 
         string clipName = "Player_";
         bodyAnimator.SetFloat("WalkSpeed", Mathf.Abs(rb.velocity.x) / 10);
-        bodyAnimator.SetFloat("FallSpeed", Mathf.Clamp(rb.velocity.y / 4, -5, 0));
+        bodyAnimator.SetFloat("FallSpeed", Mathf.Clamp(Mathf.Abs(rb.velocity.y) / 4, 0, 5));
 
 
         if (p_states.grounded)
@@ -221,6 +221,7 @@ public class PlayerController : MonoBehaviour
         {
             if (hits[i].tag == "Civilian" && p_sackVars.heldCivilians < 3 && p_sackVars.holdingSack)
             {
+                hits[i].GetComponent<Civilian>().enabled = false;
                 grabbedCivilian = hits[i].transform;
                 string grabClip = "Player_Grab";
                 if (p_sackVars.heldCivilians == 0)

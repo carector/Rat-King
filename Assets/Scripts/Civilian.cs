@@ -4,7 +4,6 @@ using UnityEngine;
 
 public abstract class Civilian : MonoBehaviour
 {
-    public bool canBeGrabbed;
     public CivilianData data;
 
     protected Rigidbody2D rb;
