@@ -63,7 +63,7 @@ public class CopScript : MonoBehaviour
         }
 
 
-        if (!noticedPlayer)
+        if (!noticedPlayer && !ply.p_states.dead)
         {
             transform.position = new Vector2(rightBound, transform.position.y);
             yield return WaitBeforeFlipping();
@@ -89,7 +89,7 @@ public class CopScript : MonoBehaviour
             }
         }
 
-        if (!noticedPlayer)
+        if (!noticedPlayer && !ply.p_states.dead)
         {
             transform.position = new Vector2(leftBound, transform.position.y);
             yield return WaitBeforeFlipping();
@@ -132,9 +132,12 @@ public class CopScript : MonoBehaviour
 
     bool WithinShootingDistance()
     {
-        float distance = Mathf.Abs((transform.position - ply.transform.position).x);
-        if (distance <= shootingDistance)
-            return true;
+        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position + new Vector3(shootingDistance/2 * facingDirection, 1), new Vector2(shootingDistance, 3), 0);
+        for (int i = 0; i < hits.Length; i++)
+        {
+            if (hits[i].tag == "Player")
+                return true;
+        }
         return false;
     }
 
@@ -158,7 +161,7 @@ public class CopScript : MonoBehaviour
 
     bool PlayerHitFromRaycast()
     {
-        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position + new Vector3(8 * facingDirection, 1), new Vector2(13, 6), 0);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(transform.position + new Vector3(8 * facingDirection, 1), new Vector2(13, 3), 0);
         for (int i = 0; i < hits.Length; i++)
         {
             if (hits[i].tag == "Player")

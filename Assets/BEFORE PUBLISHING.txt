@@ -1,6 +1,7 @@
 Before releasing:
 
 - Remove all singletons from all levels but first
-- Make sure all terrain is marked with "frictionless" physmat
+- Make sure all terrain is marked with "ground" physmat
 - Check for any TEMP code
 - Move quit button offscreen
+- Add massive killtriggers below all levels

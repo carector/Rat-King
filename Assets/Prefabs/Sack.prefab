@@ -101,6 +101,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   grabbable: 0
   gettingCrushed: 0
+  mats:
+  - {fileID: 6200000, guid: ec287d6f0a9cd1348be9b2da46efd15e, type: 2}
+  - {fileID: 6200000, guid: b6d45e64b8d34b2489971bddab9bda14, type: 2}
   grounded: 0
 --- !u!50 &3006560914095546693
 Rigidbody2D:

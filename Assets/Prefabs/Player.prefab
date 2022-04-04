@@ -485,6 +485,9 @@ MonoBehaviour:
     midairAcceleration: 50
     midairDeceleration: 0.25
     jumpForce: 24
+    mats:
+    - {fileID: 6200000, guid: 1376cd2380c7c644b9e0ef36fb08dde6, type: 2}
+    - {fileID: 6200000, guid: b6d45e64b8d34b2489971bddab9bda14, type: 2}
   p_sackVars:
     holdingSack: 1
     heldCivilians: 0
@@ -510,7 +513,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 4587752863682388185}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 1376cd2380c7c644b9e0ef36fb08dde6, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -533,7 +536,7 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: b6d45e64b8d34b2489971bddab9bda14, type: 2}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
@@ -547,7 +550,7 @@ CircleCollider2D:
   m_GameObject: {fileID: 4587752863682388185}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 1376cd2380c7c644b9e0ef36fb08dde6, type: 2}
+  m_Material: {fileID: 0}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0

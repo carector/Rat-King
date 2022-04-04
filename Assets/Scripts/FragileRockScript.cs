@@ -9,7 +9,7 @@ public class FragileRockScript : MonoBehaviour
     GameManager gm;
     Animator anim;
 
-    bool broken;
+    public bool broken;
 
     // Start is called before the first frame update
     void Start()

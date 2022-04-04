@@ -135,18 +135,27 @@
   </objectgroup>
  </tile>
  <tile id="705">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="8" width="16" height="8"/>
+  </objectgroup>
   <animation>
    <frame tileid="705" duration="100"/>
    <frame tileid="708" duration="100"/>
   </animation>
  </tile>
  <tile id="706">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="8" width="16" height="8"/>
+  </objectgroup>
   <animation>
    <frame tileid="706" duration="100"/>
    <frame tileid="709" duration="100"/>
   </animation>
  </tile>
  <tile id="707">
+  <objectgroup draworder="index" id="2">
+   <object id="1" x="0" y="8" width="16" height="8"/>
+  </objectgroup>
   <animation>
    <frame tileid="707" duration="100"/>
    <frame tileid="710" duration="100"/>

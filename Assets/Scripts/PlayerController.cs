@@ -14,6 +14,7 @@ public class PlayerController : MonoBehaviour
         public float midairAcceleration;
         public float midairDeceleration;
         public float jumpForce;
+        public PhysicsMaterial2D[] mats;
     }
 
     [System.Serializable]
@@ -110,6 +111,11 @@ public class PlayerController : MonoBehaviour
             rb.mass = 1;
 
         p_states.grounded = CheckIfGrounded();
+        if(p_states.grounded)
+            rb.sharedMaterial = p_movement.mats[0];
+        else
+            rb.sharedMaterial = p_movement.mats[1];
+
         UpdateInputButtons();
 
     }
@@ -143,7 +149,7 @@ public class PlayerController : MonoBehaviour
         else
             p_states.jumping = false;
 
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position + Vector3.down, 0.25f, Vector2.down, 0.15f, ~(1 << 6));
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position + Vector3.down, 0.4f, Vector2.down, 0.15f, ~(1 << 6));
         foreach (RaycastHit2D hit in hits)
         {
             if (hit.transform != null && hit.transform.tag == "Ground")
@@ -175,7 +181,7 @@ public class PlayerController : MonoBehaviour
         {
             if (p_states.grounded)
             {
-                if (p_states.canMove && (Vector2.Distance(transform.position, lastPosition) > 0.1f))
+                if (p_states.canMove && Vector2.Distance(transform.position, lastPosition) > 0.1f)
                     clipName += "Walk";
                 else
                     clipName += "Idle";
@@ -260,7 +266,7 @@ public class PlayerController : MonoBehaviour
                 p_states.grabbing = true;
                 break;
             }
-            if (hits[i].tag == "Sack" && p_sackVars.spawnedSack.grabbable && !p_sackVars.spawnedSack.gettingCrushed)
+            if (hits[i].tag == "Sack" && p_sackVars.spawnedSack.grabbable && !p_sackVars.spawnedSack.gettingCrushed && !p_sackVars.spawnedSack.movingThroughChute)
             {
                 p_sackVars.holdingSack = true;
                 p_sackVars.spawnedSack = null;

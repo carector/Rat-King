@@ -58,9 +58,10 @@ public class CutsceneHandler : MonoBehaviour
     {
         if (!isEnd) // TEMP
         {
+
             if (!gm.gm_gameSaveData.playedCutscenes[cutsceneIndex])
             {
-                gm.StopMusic();
+                gm.PlayMusic(gm.gm_gameSfx.musicTracks[2+cutsceneIndex]);
                 yield return new WaitForSeconds(2);
                 spr.color = Color.white;
 

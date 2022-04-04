@@ -136,14 +136,23 @@ public class GameManager : MonoBehaviour
 
         UpdateUI();
 
+        // Fullscreen toggle
         if (Input.GetKeyDown(KeyCode.F4))
             SetFullscreenMode(!Screen.fullScreen);
 
         if (gm_gameRefs.currentLevel != null)
         {
-            if (Input.GetKeyDown(KeyCode.Escape) && !gm_gameRefs.currentLevel.levelOver)
+            // Pause toggle
+            if (Input.GetKeyDown(KeyCode.Escape) && !gm_gameRefs.currentLevel.levelOver && !gm_gameVars.isLoadingLevel)
             {
                 SetPausedState(!gm_gameVars.gamePaused);
+            }
+
+            // Retry level
+            if (!gm_gameVars.gamePaused && Input.GetKeyDown(KeyCode.R) && !gm_gameVars.isLoadingLevel)
+            {
+                ply.p_states.canMove = false;
+                LoadLevel(SceneManager.GetActiveScene().buildIndex);
             }
         }
 
@@ -193,7 +202,7 @@ public class GameManager : MonoBehaviour
         titleScreenPanel = GameObject.Find("TitleScreenPanel").GetComponent<RectTransform>();
         timerText = GameObject.Find("TimerText").GetComponent<TextMeshProUGUI>();
         timerAnimator = timerText.GetComponent<Animator>();
-        gameOverPopupAnimator = GameObject.Find("GameOverPopup").GetComponent<Animator>();
+        gameOverPopupAnimator = GameObject.Find("GameOverPopupHolder").GetComponent<Animator>();
         titleMenu = GameObject.Find("TopMenuPanel").GetComponent<RectTransform>();
         levelSelectMenu = GameObject.Find("LevelSelectPanel").GetComponent<RectTransform>();
         scoreSlider = GameObject.Find("ScoreSlider").GetComponent<Slider>();
@@ -562,7 +571,7 @@ public class GameManager : MonoBehaviour
         else if (screen == 2)
         {
             popupTitle.sprite = gm_gameRefs.popupScreenTitles[1];
-            popupContinue.sprite = gm_gameRefs.popupScreenTitles[4];
+            popupContinue.sprite = gm_gameRefs.popupScreenTitles[3];
         }
 
         CheckAndPlayClip("GameOverPopup_Appear", gameOverPopupAnimator);
@@ -570,10 +579,8 @@ public class GameManager : MonoBehaviour
 
     public void RetryOrContinue()
     {
-        if (ply.p_states.dead)
+        if (ply.p_states.dead || gm_gameVars.gamePaused)
             LoadLevel(SceneManager.GetActiveScene().buildIndex);
-        else if (gm_gameVars.gamePaused)
-            SetPausedState(false);
         else
             LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
     }

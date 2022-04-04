@@ -2561,6 +2561,10 @@ PrefabInstance:
       value: level1
       objectReference: {fileID: 0}
     - target: {fileID: -3783996011267436145, guid: 29ce906c7fde4004a82e634eef58d2ae, type: 3}
+      propertyPath: m_Material
+      value: 
+      objectReference: {fileID: 6200000, guid: 1cb55303f82902d419182d9034c41fee, type: 2}
+    - target: {fileID: -3783996011267436145, guid: 29ce906c7fde4004a82e634eef58d2ae, type: 3}
       propertyPath: m_UsedByComposite
       value: 0
       objectReference: {fileID: 0}
@@ -2635,6 +2639,10 @@ PrefabInstance:
     - target: {fileID: 3915980447784702226, guid: 29ce906c7fde4004a82e634eef58d2ae, type: 3}
       propertyPath: m_SortingLayer
       value: -1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3915980447784702226, guid: 29ce906c7fde4004a82e634eef58d2ae, type: 3}
+      propertyPath: m_SortingOrder
+      value: -10
       objectReference: {fileID: 0}
     - target: {fileID: 3915980447784702226, guid: 29ce906c7fde4004a82e634eef58d2ae, type: 3}
       propertyPath: m_SortingLayerID

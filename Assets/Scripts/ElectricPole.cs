@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class ElectricPole : MonoBehaviour
 {
-    public PressurePlate connectedButton;
-    public bool inverted;
+    public bool activated;
+    public bool invertSignal;
+    public List<PressurePlate> connectedPlates;
 
     Animator anim;
     GameManager gm;
@@ -22,12 +23,25 @@ public class ElectricPole : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        if (connectedButton.pressed || (inverted && !connectedButton.pressed))
+        bool activatedUpdate = false;
+        foreach(PressurePlate p in connectedPlates)
+        {
+            if(p.pressed)
+            {
+                activatedUpdate = true;
+                break;
+            }
+        }
+
+        activated = activatedUpdate;
+
+        if ((activated && !invertSignal) || (invertSignal && !activated))
         {
             gm.CheckAndPlayClip("ElectricPole_Off", anim);
             col.enabled = false;
         }
-        else if (!connectedButton.pressed || (inverted && connectedButton.pressed))
+        
+        if ((!invertSignal && !activated) || (invertSignal && activated))
         {
             gm.CheckAndPlayClip("ElectricPole_On", anim);
             col.enabled = true;

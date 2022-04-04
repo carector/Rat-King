@@ -11,6 +11,7 @@ public class PressurePlate : MonoBehaviour
     Animator anim;
 
     public bool pressed;
+    public List<FragileRockScript> connectedRocks;
 
     // Start is called before the first frame update
     void Start()
@@ -24,11 +25,15 @@ public class PressurePlate : MonoBehaviour
     void FixedUpdate()
     {
         pressed = CheckIfPressed();
+
         string clipName = "PressurePlate_";
         if (pressed)
             clipName += "Pressed";
         else
             clipName += "Released";
+
+
+
 
         gm.CheckAndPlayClip(clipName, anim);
     }
@@ -60,6 +65,16 @@ public class PressurePlate : MonoBehaviour
                 break;
         }
 
-        return p;
+        bool pRock = false;
+        for(int i = 0; i < connectedRocks.Count; i++)
+        {
+            if (!connectedRocks[i].broken)
+            {
+                pRock = true;
+                break;
+            }
+        }
+
+        return p || pRock;
     }
 }

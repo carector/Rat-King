@@ -6,12 +6,17 @@ public class SackScript : MonoBehaviour
 {
     public bool grabbable;
     public bool gettingCrushed;
-    Rigidbody2D rb;
+    public PhysicsMaterial2D[] mats;
+    
+    [HideInInspector]
+    public Rigidbody2D rb;
     PlayerController ply;
     Animator anim;
     GameManager gm;
 
     public bool grounded;
+    public bool movingThroughChute;
+    bool impactDelayInProgress;
 
     // Start is called before the first frame update
     void Start()
@@ -40,32 +45,47 @@ public class SackScript : MonoBehaviour
         grabbable = true;
     }
 
+    IEnumerator ImpactDelayInProgress()
+    {
+        yield return null;
+        //yield return new WaitForSeconds(0.5f);
+        impactDelayInProgress = false;
+    }
+
     // Update is called once per frame
     void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down, Vector2.down, 0.75f, ~(1 << 7));
-        if (hit.transform != null)
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position + Vector3.down, 0.35f, Vector2.down, 0.25f, ~(1 << 7));
+        Debug.DrawRay(transform.position + Vector3.down, Vector2.down * 0.25f, Color.red, Time.deltaTime);
+        foreach (RaycastHit2D hit in hits)
         {
-            if (hit.transform.tag == "Ground" && !grounded && !gettingCrushed && grabbable)
+            if (hit.transform != null)
             {
-                gm.PlaySFX(gm.gm_gameSfx.generalSfx[0]);
-                grounded = true;
-                rb.angularVelocity = 0;
-                rb.freezeRotation = true;
-                transform.rotation = Quaternion.identity;
-                anim.Play("Sack_Impact", 0, 0);
+                if (hit.transform.tag == "Ground" && !gettingCrushed && grabbable && !movingThroughChute)
+                {
+                    if (!impactDelayInProgress && !grounded)
+                    {
+                        gm.PlaySFX(gm.gm_gameSfx.generalSfx[0]);
+                        grounded = true;
+                        rb.angularVelocity = 0;
+                        rb.freezeRotation = true;
+                        transform.rotation = Quaternion.identity;
+                        anim.Play("Sack_Impact", 0, 0);
+                        impactDelayInProgress = true;
+                        rb.sharedMaterial = mats[0];
+                        StartCoroutine(ImpactDelayInProgress());
+                    }
+                    return;
+                }
             }
-            else if (hit.transform.tag != "Ground" && grounded)
-            {
-                grounded = false;
-                anim.Play("Sack_Midair", 0, 0);
-            }
-        }
-        else if(grounded && hit.transform == null)
-        {
-            grounded = false;
-            anim.Play("Sack_Midair", 0, 0);
         }
 
+        if (grounded)
+        {
+            grounded = false;
+            rb.sharedMaterial = mats[1];
+            anim.Play("Sack_Midair", 0, 0);
+        }
     }
+
 }
