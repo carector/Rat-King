@@ -22,7 +22,7 @@ public class ConveyerBelt : MonoBehaviour
     // Update is called once per frame
     void FixedUpdate()
     {
-        foreach(Collider2D c in cols)
+        foreach (Collider2D c in cols)
             c.transform.position += Vector3.right * direction * 0.05f * speedMultiplier;
 
         cols = cols.Where(item => item != null).ToList();
@@ -32,12 +32,16 @@ public class ConveyerBelt : MonoBehaviour
     {
         Collider2D t = null;
         bool grounded = false;
+
+        /*
         if (other.tag == "Player")
         {
             grounded = ply.p_states.grounded;
             t = other;
         }
-        else if (other.tag == "Sack")
+        else */
+
+        if (other.tag == "Sack")
         {
             if (sack == null)
                 sack = FindObjectOfType<SackScript>();
@@ -45,7 +49,7 @@ public class ConveyerBelt : MonoBehaviour
             t = other;
         }
 
-        if(t != null)
+        if (t != null)
         {
             bool contains = cols.Contains(other);
             if (grounded && !contains)
