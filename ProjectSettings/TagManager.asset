@@ -8,6 +8,7 @@ TagManager:
   - NoWalk
   - Civilian
   - Sack
+  - LevelSelectButton
   layers:
   - Default
   - TransparentFX

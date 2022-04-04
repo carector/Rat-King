@@ -5,10 +5,12 @@ using UnityEngine;
 public class ChamberTransfer : MonoBehaviour
 {
     public bool isExit;
+    public bool disappearAfterUsing;
     public ChamberTransfer destination;
     public Transform spawnPosition;
     public bool inBounds;
 
+    bool canEnter = true;
     bool playingIntroAnimation;
 
     [HideInInspector]
@@ -31,9 +33,9 @@ public class ChamberTransfer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(inBounds && Input.GetKeyDown(KeyCode.W) && !lm.levelOver && !playingIntroAnimation && !(isExit && lm.points+ply.p_sackVars.heldCivilians >= lm.requiredPoints && !ply.p_sackVars.holdingSack))
+        if (inBounds && canEnter && Input.GetKeyDown(KeyCode.W) && !lm.levelOver && !playingIntroAnimation && !(isExit && lm.points + ply.p_sackVars.heldCivilians >= lm.requiredPoints && !ply.p_sackVars.holdingSack))
         {
-            if(isExit)
+            if (isExit)
             {
                 if (!lm.timerRunning)
                 {
@@ -69,8 +71,27 @@ public class ChamberTransfer : MonoBehaviour
         ply.p_states.canMove = true;
         lm.timerRunning = true;
         playingIntroAnimation = false;
-
         lm.BeginLevel();
+        if (destination.disappearAfterUsing)
+            destination.WaitAndFade();
+    }
+
+    public void WaitAndFade()
+    {
+        canEnter = false;
+        StartCoroutine(WaitForExitBounds());
+    }
+
+    IEnumerator WaitForExitBounds()
+    {
+        yield return new WaitForSeconds(0.5f);
+        while (inBounds)
+        {
+            print("Waiting");
+            yield return null;
+        }
+        anim.Play("TransferDoorDisappear");
+        
     }
 
     private void OnTriggerStay2D(Collider2D other)
@@ -82,6 +103,8 @@ public class ChamberTransfer : MonoBehaviour
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.tag == "Player")
+        {
             inBounds = false;
+        }
     }
 }

@@ -2,20 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class LevelManager : MonoBehaviour
 {
+    public int musicIndex = 0;
     public int points;
     public int requiredPoints;
     public bool timerRunning;
-    public float startingTime = 120;
+    public float startingTime = 30;
     public float runtime;
 
     public Transform chamberCenter;
-    
-    public bool levelOver;
 
-    bool shredding;
+    public bool levelOver;
+    float lerpPoints;
+
+    public bool shredding;
     ParticleSystem blood;
     Transform shredSackHolder;
     Transform sack;
@@ -24,8 +27,7 @@ public class LevelManager : MonoBehaviour
     PlayerController ply;
     CameraFollow cam;
 
-    Slider progressSlider;
-    Text progressText;
+    IEnumerator spawnRats;
 
     // Start is called before the first frame update
     void Start()
@@ -36,14 +38,10 @@ public class LevelManager : MonoBehaviour
         cam.target = chamberCenter;
         anim = GetComponent<Animator>();
         gm = FindObjectOfType<GameManager>();
+        gm.SetScoreValue(0, requiredPoints);
         shredSackHolder = transform.GetChild(0).GetChild(0);
 
         runtime = startingTime;
-
-        progressSlider = transform.GetChild(2).GetChild(0).GetComponent<Slider>();
-        progressSlider.maxValue = requiredPoints;
-        progressText = transform.GetChild(2).GetChild(1).GetComponent<Text>();
-        progressText.text = points + " / " + requiredPoints;
     }
 
     // Update is called once per frame
@@ -51,17 +49,16 @@ public class LevelManager : MonoBehaviour
     {
         if (runtime > 0)
         {
-            if(timerRunning)
+            if (timerRunning && cam.target != chamberCenter && !shredding)
                 runtime -= Time.deltaTime;
         }
         else
             runtime = 0;
 
-        if (Input.GetKeyDown(KeyCode.E))
-            GameOver();
+        if (!shredding)
+            lerpPoints = points;
 
-        progressText.text = points + " / " + requiredPoints;
-        progressSlider.value = Mathf.Lerp(progressSlider.value, points, 0.25f);
+        gm.SetScoreValueLerp(points, requiredPoints);
 
         if (!levelOver)
         {
@@ -82,20 +79,36 @@ public class LevelManager : MonoBehaviour
     {
         timerRunning = false;
         ply.p_states.canMove = false;
-        yield return new WaitForSeconds(2);
+        if (gm.gm_gameSaveData.furthestUnlockedLevel + gm.gm_gameVars.startingLevelBuildIndex <= SceneManager.GetActiveScene().buildIndex)
+            gm.UnlockNextLevel();
+
+        ply.p_states.victory = true;
+        gm.PlaySFX(gm.gm_gameSfx.playerSfx[6]);
+        yield return new WaitForSeconds(1.5f);
         gm.ShowGameOverPopup(0);
     }
 
     IEnumerator GameOverSequence()
     {
         timerRunning = false;
-        ply.p_states.canMove = false;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(2);
         gm.ShowGameOverPopup(1);
     }
 
-    void GameOver()
+    public IEnumerator SpawnRatsCoroutine()
     {
+        while (runtime == 0)
+        {
+            Instantiate(gm.gm_gameRefs.ratPrefab, new Vector2(cam.transform.position.x + Random.Range(-14f, 28f), cam.transform.position.y + 13), Quaternion.identity);
+            yield return new WaitForSeconds(0.35f);
+        }
+    }
+
+    public void GameOver()
+    {
+        gm.ScreenShake(15);
+        ply.Die();
+        cam.target = null;
         levelOver = true;
         StartCoroutine(GameOverSequence());
     }
@@ -103,7 +116,7 @@ public class LevelManager : MonoBehaviour
     public void BeginLevel()
     {
         timerRunning = true;
-        gm.PlayMusic(gm.gm_gameSfx.musicTracks[0]);
+        gm.PlayMusic(gm.gm_gameSfx.musicTracks[musicIndex]);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -118,6 +131,7 @@ public class LevelManager : MonoBehaviour
     {
         shredding = false;
         points += ply.p_sackVars.heldCivilians;
+
         ply.EmptySack();
         ply.p_sackVars.holdingSack = true;
     }
@@ -136,13 +150,17 @@ public class LevelManager : MonoBehaviour
         sackRb.velocity = Vector2.zero;
         sackRb.angularVelocity = 0;
 
+        float extendedTime = runtime + (20 * ply.p_sackVars.heldCivilians);
         while (shredding)
         {
             shredSackHolder.transform.localPosition = new Vector2(Random.Range(-0.1f, 0.1f), Random.Range(-0.1f, 0.1f));
-            sack.transform.localPosition = Vector2.MoveTowards(sack.transform.localPosition, Vector2.zero, 0.1f);
+            sack.transform.localPosition = Vector2.MoveTowards(sack.transform.localPosition, Vector2.zero, 0.2f);
+
+            runtime = Mathf.MoveTowards(runtime, extendedTime, 0.35f * ply.p_sackVars.heldCivilians);
             //sack.transform.rotation = Quaternion.Lerp(sack.transform.rotation, Quaternion.identity, 0.1f);
-            yield return null;
+            yield return new WaitForFixedUpdate();
         }
+        runtime = extendedTime;
         Destroy(sack.gameObject);
     }
 }

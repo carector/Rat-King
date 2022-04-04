@@ -14,7 +14,8 @@ public class GameManager : MonoBehaviour
     {
         titleScreen,
         inGame,
-        settings
+        settings,
+        cutscene
     }
 
     [System.Serializable]
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
         public UIScreen activeUIScreen;
         public int titleScreenDepth;
         public Vector2 screenSize;
+        public int startingLevelBuildIndex;
     }
     [System.Serializable]
     public class GamePublicReferences
@@ -33,6 +35,9 @@ public class GameManager : MonoBehaviour
         public LevelManager currentLevel;
         public AudioMixer mixer;
         public EventSystem eventSystem;
+        public Sprite[] numbers;
+        public Sprite[] popupScreenTitles;
+        public GameObject ratPrefab;
     }
     [System.Serializable]
     public class GameSoundEffects
@@ -45,7 +50,8 @@ public class GameManager : MonoBehaviour
     [System.Serializable]
     public class GameSaveData
     {
-        // TBD
+        public int furthestUnlockedLevel;
+        public bool[] playedCutscenes = new bool[3];
     }
 
     // Main class references
@@ -58,29 +64,43 @@ public class GameManager : MonoBehaviour
     AudioSource musicSource;
     AudioSource ambienceSource;
     AudioSource sfxSource;
+    AudioSource sfxSourceStoppable;
 
     // UI references
+    Transform titleArt;
     RectTransform titleScreenPanel;
     RectTransform settingsPanel;
     RectTransform hudPanel;
+    RectTransform cutscenePanel;
     TextMeshProUGUI timerText;
+    Animator timerAnimator;
     Animator gameOverPopupAnimator;
-    TextMeshProUGUI popupButton1Text;
+
+    Image popupTitle;
+    Image popupContinue;
+
     RectTransform ratArrivalText;
-    TextMeshProUGUI popupButtonHeaderText;
+
     Image blackScreenOverlay;
     RectTransform titleMenu;
     RectTransform levelSelectMenu;
     RectTransform creditsMenu;
     RectTransform quitMenu;
     RectTransform quitButton;
+    TextMeshProUGUI cutsceneText;
+    TextMeshProUGUI cutsceneShakeText;
     Slider sfxSlider;
     Slider musicSlider;
     Slider ambSlider;
+    Slider scoreSlider;
+    TextMeshProUGUI scoreText;
+    Image sackFullnessImage;
+    public List<Button> levelSelectButtons;
 
     // Other references
     NewgroundsUtility ng;
     Transform cam;
+    CameraFollow camFollow;
     PlayerController ply;
 
     // Local variables
@@ -90,6 +110,12 @@ public class GameManager : MonoBehaviour
     {
         DontDestroyOnLoad(transform.parent.gameObject);
         GetReferences();
+        ReadSaveData();
+
+        if (gm_gameSaveData.playedCutscenes.Length == 0)
+            gm_gameSaveData.playedCutscenes = new bool[3];
+
+        UpdateUnlockedLevels();
         LoadAudioLevelsFromPlayerPrefs();
 
         if (SceneManager.GetActiveScene().buildIndex == 1)
@@ -113,19 +139,12 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F4))
             SetFullscreenMode(!Screen.fullScreen);
 
-        if (Input.GetKeyDown(KeyCode.Escape))
+        if (gm_gameRefs.currentLevel != null)
         {
-            if (gm_gameVars.gamePaused)
+            if (Input.GetKeyDown(KeyCode.Escape) && !gm_gameRefs.currentLevel.levelOver)
             {
-                CheckAndPlayClip("GameOverPopup_Default", gameOverPopupAnimator);
-                Time.timeScale = 1;
+                SetPausedState(!gm_gameVars.gamePaused);
             }
-            else
-            {
-                ShowGameOverPopup(2);
-            }
-
-            gm_gameVars.gamePaused = !gm_gameVars.gamePaused;
         }
 
     }
@@ -159,37 +178,61 @@ public class GameManager : MonoBehaviour
     void GetReferences()
     {
         cam = gm_gameRefs.globalCameraHolderReference.GetChild(0);
+        camFollow = FindObjectOfType<CameraFollow>();
 
         // UI references
+        titleArt = GameObject.Find("TitleArt").transform;
         blackScreenOverlay = GameObject.Find("BlackScreenOverlay").GetComponent<Image>();
         sfxSlider = GameObject.Find("SFXVolumeSlider").GetComponent<Slider>();
         ambSlider = GameObject.Find("AmbienceVolumeSlider").GetComponent<Slider>();
         musicSlider = GameObject.Find("MusicVolumeSlider").GetComponent<Slider>();
-        popupButton1Text = GameObject.Find("PopupButton1Text").GetComponent<TextMeshProUGUI>();
-        popupButtonHeaderText = GameObject.Find("PopupButtonHeaderText").GetComponent<TextMeshProUGUI>();
+        popupTitle = GameObject.Find("PopupTitle").GetComponent<Image>();
+        popupContinue = GameObject.Find("PopupButtonContinue").GetComponent<Image>();
         hudPanel = GameObject.Find("HUDPanel").GetComponent<RectTransform>();
         settingsPanel = GameObject.Find("SettingsPanel").GetComponent<RectTransform>();
         titleScreenPanel = GameObject.Find("TitleScreenPanel").GetComponent<RectTransform>();
         timerText = GameObject.Find("TimerText").GetComponent<TextMeshProUGUI>();
+        timerAnimator = timerText.GetComponent<Animator>();
         gameOverPopupAnimator = GameObject.Find("GameOverPopup").GetComponent<Animator>();
         titleMenu = GameObject.Find("TopMenuPanel").GetComponent<RectTransform>();
         levelSelectMenu = GameObject.Find("LevelSelectPanel").GetComponent<RectTransform>();
+        scoreSlider = GameObject.Find("ScoreSlider").GetComponent<Slider>();
+        scoreText = GameObject.Find("ScoreText").GetComponent<TextMeshProUGUI>();
         creditsMenu = GameObject.Find("CreditsPanel").GetComponent<RectTransform>();
+        cutscenePanel = GameObject.Find("CutscenePanel").GetComponent<RectTransform>();
         quitMenu = GameObject.Find("QuitPanel").GetComponent<RectTransform>();
         ratArrivalText = GameObject.Find("RatsArrivedWarning").GetComponent<RectTransform>();
         quitButton = GameObject.Find("QuitButton").GetComponent<RectTransform>();
-        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        sackFullnessImage = GameObject.Find("SackFullnessNumber").GetComponent<Image>();
+        cutsceneText = GameObject.Find("CutsceneText").GetComponent<TextMeshProUGUI>();
+        cutsceneShakeText = cutsceneText.transform.GetChild(0).GetComponent<TextMeshProUGUI>();
+
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             quitButton.anchoredPosition = new Vector2(0, -282.5f);
 
         // Audio references
         musicSource = GameObject.Find("GameMusicSource").GetComponent<AudioSource>();
         sfxSource = GameObject.Find("GameSFXSource").GetComponent<AudioSource>();
+        sfxSourceStoppable = GameObject.Find("GameSFXSourceStoppable").GetComponent<AudioSource>();
         ambienceSource = GameObject.Find("GameAmbienceSource").GetComponent<AudioSource>();
 
         ng = FindObjectOfType<NewgroundsUtility>();
     } // Obtain UI + GameObject references. Called by Start() and probably nowhere else
     public void InitializePlayer() { } // Readies / unfreezes player gameobject in-game
-    public void SetPausedState(bool paused) { } // Pauses / unpauses game and performs necessary UI stuff
+    public void SetPausedState(bool paused)
+    {
+        if (gm_gameVars.gamePaused)
+        {
+            CheckAndPlayClip("GameOverPopup_Default", gameOverPopupAnimator);
+            Time.timeScale = 1;
+        }
+        else
+        {
+            ShowGameOverPopup(2);
+        }
+
+        gm_gameVars.gamePaused = paused;
+    } // Pauses / unpauses game and performs necessary UI stuff
     public void UnlockMedal(int id)
     {
         ng.UnlockMedal(id);
@@ -218,14 +261,19 @@ public class GameManager : MonoBehaviour
 
     void LevelLoadedUpdates(int buildIndex)
     {
-        // Deselect buttons
-        gm_gameRefs.eventSystem.SetSelectedGameObject(null);
+        gm_gameRefs.eventSystem.SetSelectedGameObject(null); // Deselect buttons
         gm_gameVars.gamePaused = false;
+        camFollow.DestroyParallax();
 
         if (buildIndex == 2)
         {
+            UpdateUnlockedLevels();
             gm_gameVars.activeUIScreen = UIScreen.titleScreen;
             PlayMusic(gm_gameSfx.musicTracks[1]);
+        }
+        else if (FindObjectOfType<CutsceneHandler>() != null)
+        {
+            gm_gameVars.activeUIScreen = UIScreen.cutscene;
         }
         else
         {
@@ -239,6 +287,20 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public void SetScoreValueLerp(int score, int maxScore)
+    {
+        scoreSlider.maxValue = maxScore;
+        scoreSlider.value = Mathf.Lerp(scoreSlider.value, score, 0.25f);
+        scoreText.text = score + " / " + maxScore;
+    }
+
+    public void SetScoreValue(int score, int maxScore)
+    {
+        scoreSlider.maxValue = maxScore;
+        scoreSlider.value = score;
+        scoreText.text = score + " / " + maxScore;
+    }
+
     void LoadAudioLevelsFromPlayerPrefs()
     {
         if (PlayerPrefs.HasKey("AMB_VOLUME"))
@@ -249,13 +311,19 @@ public class GameManager : MonoBehaviour
         }
 
         UpdateMusicVolume();
-        UpdateSFXVolume(false);
+        UpdateSFXVolume();
         UpdateAmbienceVolume();
 
     } // Sets audio levels to match stored values in PlayerPrefs
     public void PlaySFX(AudioClip sfx)
     {
         sfxSource.PlayOneShot(sfx);
+    }
+
+    public void PlaySFXStoppable(AudioClip sfx)
+    {
+        sfxSourceStoppable.Stop();
+        sfxSourceStoppable.PlayOneShot(sfx);
     }
 
     public void PlayMusic(AudioClip track)
@@ -271,11 +339,17 @@ public class GameManager : MonoBehaviour
         musicSource.Stop();
     }
 
+    public void UnlockNextLevel()
+    {
+        gm_gameSaveData.furthestUnlockedLevel++;
+        WriteSaveData();
+    }
+
     void ReadSaveData()
     {
         string prefix = @"idbfs/" + Application.productName;
 
-        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             prefix = Application.persistentDataPath;
 
         if (!File.Exists(prefix + @"/savedata.json"))
@@ -322,6 +396,7 @@ public class GameManager : MonoBehaviour
         switch (gm_gameVars.activeUIScreen)
         {
             case UIScreen.titleScreen:
+                cutscenePanel.anchoredPosition = Vector2.up * 1000;
                 hudPanel.anchoredPosition = Vector2.up * 1000;
                 settingsPanel.anchoredPosition = Vector2.up * 1000;
                 titleScreenPanel.anchoredPosition = Vector2.zero;
@@ -351,15 +426,32 @@ public class GameManager : MonoBehaviour
                         break;
                 }
 
+                if (gm_gameVars.titleScreenDepth == 0)
+                    titleArt.localPosition = new Vector3(0, 0, 20);
+                else
+                    titleArt.localPosition = new Vector3(-100, 0, 20);
+
                 break;
 
             case UIScreen.settings:
+                titleArt.localPosition = new Vector3(-100, 0, 20);
+                cutscenePanel.anchoredPosition = Vector2.up * 1000;
                 settingsPanel.anchoredPosition = Vector2.zero;
                 hudPanel.anchoredPosition = Vector2.up * 1000;
                 titleScreenPanel.anchoredPosition = Vector2.up * 1000;
                 break;
 
+            case UIScreen.cutscene:
+                titleArt.localPosition = new Vector3(-100, 0, 20);
+                cutscenePanel.anchoredPosition = Vector2.zero;
+                settingsPanel.anchoredPosition = Vector2.up * 1000;
+                hudPanel.anchoredPosition = Vector2.up * 1000;
+                titleScreenPanel.anchoredPosition = Vector2.up * 1000;
+                break;
+
             case UIScreen.inGame:
+                titleArt.localPosition = new Vector3(-100, 0, 20);
+                cutscenePanel.anchoredPosition = Vector2.up * 1000;
                 hudPanel.anchoredPosition = Vector2.zero;
                 settingsPanel.anchoredPosition = Vector2.up * 1000;
                 titleScreenPanel.anchoredPosition = Vector2.up * 1000;
@@ -369,8 +461,7 @@ public class GameManager : MonoBehaviour
                     float timer = gm_gameRefs.currentLevel.runtime;
                     int minutes = Mathf.FloorToInt(timer / 60F);
                     int seconds = Mathf.FloorToInt(timer - minutes * 60);
-                    int milliseconds = Mathf.FloorToInt(((timer - (minutes * 60) - seconds)) * 100);
-                    string niceTime = string.Format("{0:00}:{1:00}:{2:00}", minutes, seconds, milliseconds);
+                    string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
 
 
                     float delta = timer / gm_gameRefs.currentLevel.startingTime;
@@ -378,20 +469,37 @@ public class GameManager : MonoBehaviour
                     float g = Mathf.MoveTowards(0, 1, delta);
                     float b = 0;
 
-                    timerText.color = new Color(r, g, b, 1);
+                    sackFullnessImage.sprite = gm_gameRefs.numbers[ply.p_sackVars.heldCivilians];
                     timerText.text = niceTime;
+                    if (timer <= 13)
+                        CheckAndPlayClip("TimerText_Flash", timerAnimator);
+                    else if (gm_gameRefs.currentLevel.shredding)
+                        CheckAndPlayClip("TimerText_Green", timerAnimator);
+                    else
+                        CheckAndPlayClip("TimerText_Default", timerAnimator);
 
                     if (timer == 0f && !ply.p_states.dead)
                     {
-                        ratArrivalText.anchoredPosition = Vector2.down * 64;
+                        if (ratArrivalText.anchoredPosition.y != -169)
+                        {
+                            gm_gameRefs.currentLevel.StartCoroutine(gm_gameRefs.currentLevel.SpawnRatsCoroutine());
+                            PlaySFX(gm_gameSfx.uiSfx[Random.Range(3, 6)]);
+                            ratArrivalText.anchoredPosition = Vector2.down * 169;
+                        }
                     }
                     else
-                        ratArrivalText.anchoredPosition = Vector2.up*250;
+                        ratArrivalText.anchoredPosition = Vector2.up * 250;
                 }
                 else
                     timerText.text = "";
                 break;
         }
+    }
+
+    public void SetCutsceneDialog(string text)
+    {
+        cutsceneText.text = text;
+        cutsceneShakeText.text = text;
     }
 
     public void QuitGame()
@@ -418,8 +526,24 @@ public class GameManager : MonoBehaviour
             case 2:
                 screen = UIScreen.titleScreen;
                 break;
+            case 3:
+                screen = UIScreen.cutscene;
+                break;
         }
         gm_gameVars.activeUIScreen = screen;
+    }
+
+    public void SettingsBackButton()
+    {
+        if (SceneManager.GetActiveScene().buildIndex == 2)
+        {
+            SetTitleScreenDepth(0);
+            SetActiveUIScreen(2);
+        }
+        else
+        {
+            SetActiveUIScreen(0);
+        }
     }
 
     public void ShowGameOverPopup(int screen) // 0 = victory, 1 = game over, 2 = pause
@@ -427,18 +551,18 @@ public class GameManager : MonoBehaviour
         Time.timeScale = 0;
         if (screen == 0)
         {
-            popupButtonHeaderText.text = "Victory";
-            popupButton1Text.text = "Continue";
+            popupTitle.sprite = gm_gameRefs.popupScreenTitles[0];
+            popupContinue.sprite = gm_gameRefs.popupScreenTitles[5];
         }
         else if (screen == 1)
         {
-            popupButtonHeaderText.text = "Game Over";
-            popupButton1Text.text = "Retry";
+            popupTitle.sprite = gm_gameRefs.popupScreenTitles[2];
+            popupContinue.sprite = gm_gameRefs.popupScreenTitles[3];
         }
         else if (screen == 2)
         {
-            popupButtonHeaderText.text = "Paused";
-            popupButton1Text.text = "Retry";
+            popupTitle.sprite = gm_gameRefs.popupScreenTitles[1];
+            popupContinue.sprite = gm_gameRefs.popupScreenTitles[4];
         }
 
         CheckAndPlayClip("GameOverPopup_Appear", gameOverPopupAnimator);
@@ -446,8 +570,10 @@ public class GameManager : MonoBehaviour
 
     public void RetryOrContinue()
     {
-        if (gm_gameRefs.currentLevel.points < gm_gameRefs.currentLevel.requiredPoints)
+        if (ply.p_states.dead)
             LoadLevel(SceneManager.GetActiveScene().buildIndex);
+        else if (gm_gameVars.gamePaused)
+            SetPausedState(false);
         else
             LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
     }
@@ -482,7 +608,7 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("MUS_VOLUME", volume);
         gm_gameRefs.mixer.SetFloat("MusicVolume", volume);
     }
-    public void UpdateSFXVolume(bool calledFromSlider)
+    public void UpdateSFXVolume()
     {
         if (sfxSlider == null)
             return;
@@ -495,18 +621,29 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt("SFX_VOLUME", volume);
         gm_gameRefs.mixer.SetFloat("SFXVolume", volume);
 
-        if (calledFromSlider)
+        if (initialized)
         {
             int rand = Random.Range(0, 3);
             PlaySFX(gm_gameSfx.uiSfx[rand]);
         }
     }
+
+    public void UpdateUnlockedLevels()
+    {
+        for (int i = 0; i <= gm_gameSaveData.furthestUnlockedLevel; i++)
+        {
+            levelSelectButtons[i].interactable = true;
+
+            levelSelectButtons[i].transform.GetComponentInChildren<TextMeshProUGUI>().color = Color.white;
+        }
+    }
+
     void WriteSaveData()
     {
         // Reason for idbfs prefix: https://itch.io/t/140214/persistent-data-in-updatable-webgl-games (don't question it)
         string prefix = @"idbfs/" + Application.productName;
 
-        if (Application.platform == RuntimePlatform.WindowsPlayer)
+        if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             prefix = Application.persistentDataPath;
         else if (!Directory.Exists(prefix))
             Directory.CreateDirectory(prefix);

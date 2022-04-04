@@ -9,10 +9,12 @@ public class ElectricPole : MonoBehaviour
 
     Animator anim;
     GameManager gm;
+    Collider2D col;
 
     // Start is called before the first frame update
     void Start()
     {
+        col = GetComponent<Collider2D>();
         anim = GetComponent<Animator>();
         gm = FindObjectOfType<GameManager>();
     }
@@ -21,8 +23,14 @@ public class ElectricPole : MonoBehaviour
     void FixedUpdate()
     {
         if (connectedButton.pressed || (inverted && !connectedButton.pressed))
+        {
             gm.CheckAndPlayClip("ElectricPole_Off", anim);
-        else if(!connectedButton.pressed || (inverted && connectedButton.pressed))
+            col.enabled = false;
+        }
+        else if (!connectedButton.pressed || (inverted && connectedButton.pressed))
+        {
             gm.CheckAndPlayClip("ElectricPole_On", anim);
+            col.enabled = true;
+        }
     }
 }

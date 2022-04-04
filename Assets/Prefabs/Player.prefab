@@ -497,6 +497,7 @@ MonoBehaviour:
     jumping: 0
     grounded: 1
     dead: 0
+    victory: 0
     showingSackContents: 0
     facingDirection: 1
   mousePosition: {x: 0, y: 0}
@@ -513,8 +514,8 @@ CapsuleCollider2D:
   m_IsTrigger: 1
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_Size: {x: 2.5, y: 2}
+  m_Offset: {x: -0.000000010718374, y: -0.08991224}
+  m_Size: {x: 2.5000002, y: 1.8201865}
   m_Direction: 1
 --- !u!50 &4587752863682388189
 Rigidbody2D:
@@ -550,9 +551,9 @@ CircleCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
+  m_Offset: {x: 0, y: -0.09186411}
   serializedVersion: 2
-  m_Radius: 1
+  m_Radius: 0.9081359
 --- !u!1 &4587752864146298113
 GameObject:
   m_ObjectHideFlags: 0

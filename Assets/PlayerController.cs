@@ -34,6 +34,7 @@ public class PlayerController : MonoBehaviour
         public bool jumping;
         public bool grounded;
         public bool dead;
+        public bool victory;
         public bool showingSackContents;
         public int facingDirection = 1;
     }
@@ -75,7 +76,26 @@ public class PlayerController : MonoBehaviour
 
     bool CanMove()
     {
-        return p_states.canMove && !p_states.throwing && !p_states.grabbing;
+        return p_states.canMove && !p_states.throwing && !p_states.grabbing && !p_states.dead && !gm.gm_gameVars.gamePaused;
+    }
+
+    public void Die()
+    {
+        p_states.dead = true;
+        gm.CheckAndPlayClip("Player_Die", bodyAnimator);
+        gm.PlaySFX(gm.gm_gameSfx.playerSfx[7]);
+        bodySprite.sortingLayerName = "Foreground";
+        bodySprite.sortingOrder = 200;
+        rb.velocity = Vector2.up * p_movement.jumpForce/2;
+        GetComponent<CircleCollider2D>().enabled = false;
+        StartCoroutine(DieSequence());
+    }
+
+    IEnumerator DieSequence()
+    {
+        yield return new WaitForSeconds(3);
+        rb.isKinematic = true;
+        rb.velocity = Vector2.zero;
     }
 
     // Update is called once per frame
@@ -105,7 +125,9 @@ public class PlayerController : MonoBehaviour
         }
 
         UpdateInputAxes();
-        mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+
+        Vector2 mouse = new Vector2(Mathf.Clamp(Input.mousePosition.x, 0, Screen.width), Mathf.Clamp(Input.mousePosition.y, 0, Screen.height));
+        mousePosition = Camera.main.ScreenToWorldPoint(mouse);
     }
 
     Collider2D[] ScanForInteractions()
@@ -138,29 +160,35 @@ public class PlayerController : MonoBehaviour
 
     void UpdateAnimations()
     {
-        if (p_states.grabbing || p_states.throwing)
+        if (p_states.grabbing || p_states.throwing || p_states.dead)
             return;
 
         string clipName = "Player_";
         bodyAnimator.SetFloat("WalkSpeed", Mathf.Abs(rb.velocity.x) / 10);
         bodyAnimator.SetFloat("FallSpeed", Mathf.Clamp(Mathf.Abs(rb.velocity.y) / 4, 0, 5));
 
-
-        if (p_states.grounded)
+        if (p_states.victory)
         {
-            if (p_states.canMove && (Vector2.Distance(transform.position, lastPosition) > 0.1f))
-                clipName += "Walk";
-            else
-                clipName += "Idle";
+            clipName += "Victory";
         }
         else
-            clipName += "Fall";
-
-        if (p_sackVars.holdingSack)
         {
-            if (p_sackVars.heldCivilians <= 0)
-                clipName += "Empty";
-            clipName += "Sack";
+            if (p_states.grounded)
+            {
+                if (p_states.canMove && (Vector2.Distance(transform.position, lastPosition) > 0.1f))
+                    clipName += "Walk";
+                else
+                    clipName += "Idle";
+            }
+            else
+                clipName += "Fall";
+
+            if (p_sackVars.holdingSack)
+            {
+                if (p_sackVars.heldCivilians <= 0)
+                    clipName += "Empty";
+                clipName += "Sack";
+            }
         }
 
         gm.CheckAndPlayClip(clipName, bodyAnimator);
@@ -197,7 +225,7 @@ public class PlayerController : MonoBehaviour
             }
         }
         else
-            rb.velocity = Vector2.MoveTowards(rb.velocity, Vector2.zero, decel);
+            rb.velocity = Vector2.MoveTowards(rb.velocity, new Vector2(0, rb.velocity.y), decel);
     }
 
     void UpdateInputButtons()
@@ -228,7 +256,7 @@ public class PlayerController : MonoBehaviour
                     grabClip += "Empty";
                 grabClip += "Sack";
                 gm.CheckAndPlayClip(grabClip, bodyAnimator);
-                gm.PlaySFX(gm.gm_gameSfx.playerSfx[2]);
+                gm.PlaySFX(gm.gm_gameSfx.playerSfx[5]);
                 p_states.grabbing = true;
                 break;
             }
@@ -248,9 +276,9 @@ public class PlayerController : MonoBehaviour
         vertex.y += 6;
         Vector2 vel = (BezierPoint(transform.position, mousePosition, vertex, 0.1f) - (Vector2)transform.position) * 15;
 
-        gm.PlaySFX(gm.gm_gameSfx.playerSfx[1]);
+        gm.PlaySFX(gm.gm_gameSfx.playerSfx[4]);
         p_sackVars.spawnedSack = Instantiate(p_sackVars.sackObjectPrefab, transform.position, Quaternion.identity).GetComponent<SackScript>();
-        p_sackVars.spawnedSack.Initialize(vel + rb.velocity);
+        p_sackVars.spawnedSack.Initialize(vel + Vector2.up * rb.velocity.y);
         p_sackVars.holdingSack = false;
         p_states.throwing = true;
         gm.CheckAndPlayClip("Player_Throw", bodyAnimator);
@@ -284,9 +312,12 @@ public class PlayerController : MonoBehaviour
 
     void Jump()
     {
-        print("Jumped");
-        gm.PlaySFX(gm.gm_gameSfx.playerSfx[0]);
-        rb.velocity = new Vector2(rb.velocity.x, p_movement.jumpForce);
+        int index = 0;
+        if (p_sackVars.holdingSack)
+            index = p_sackVars.heldCivilians;
+
+        gm.PlaySFX(gm.gm_gameSfx.playerSfx[index]);
+        rb.velocity = new Vector2(rb.velocity.x, p_movement.jumpForce / (1 + ((rb.mass - 1) / 4.5f)));
         p_states.jumping = true;
     }
 

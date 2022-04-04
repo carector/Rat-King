@@ -43,7 +43,7 @@ public class SackScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down, Vector2.down, 0.5f, ~(1 << 7));
+        RaycastHit2D hit = Physics2D.Raycast(transform.position + Vector3.down, Vector2.down, 0.75f, ~(1 << 7));
         if (hit.transform != null)
         {
             if (hit.transform.tag == "Ground" && !grounded && !gettingCrushed && grabbable)
@@ -61,5 +61,11 @@ public class SackScript : MonoBehaviour
                 anim.Play("Sack_Midair", 0, 0);
             }
         }
+        else if(grounded && hit.transform == null)
+        {
+            grounded = false;
+            anim.Play("Sack_Midair", 0, 0);
+        }
+
     }
 }
