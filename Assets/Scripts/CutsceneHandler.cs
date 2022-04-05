@@ -48,7 +48,8 @@ public class CutsceneHandler : MonoBehaviour
 
     public void LoadNextLevel()
     {
-        if(isEnd)
+        gm.StopMusic();
+        if (isEnd)
             gm.LoadLevel(2);
         else
             gm.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
@@ -56,32 +57,42 @@ public class CutsceneHandler : MonoBehaviour
 
     IEnumerator DisplayCutsceneText()
     {
-        if (!isEnd) // TEMP
+        if (!gm.gm_gameSaveData.playedCutscenes[cutsceneIndex])
         {
+            gm.PlayMusic(gm.gm_gameSfx.musicTracks[2 + cutsceneIndex]);
+            yield return new WaitForSeconds(2);
+            spr.color = Color.white;
 
-            if (!gm.gm_gameSaveData.playedCutscenes[cutsceneIndex])
+            for (int i = 0; i < dialog.Length; i++)
             {
-                gm.PlayMusic(gm.gm_gameSfx.musicTracks[2+cutsceneIndex]);
-                yield return new WaitForSeconds(2);
-                spr.color = Color.white;
-
-                for (int i = 0; i < dialog.Length; i++)
-                {
-                    gm.PlaySFX(gm.gm_gameSfx.uiSfx[Random.Range(3, 6)]);
-                    gm.SetCutsceneDialog(InsertLineBreaks(dialog[i]));
-                    yield return new WaitForSeconds(2.75f);
-                    gm.SetCutsceneDialog("");
-                    yield return new WaitForSeconds(0.5f);
-                }
-
-                //gm.gm_gameSaveData.playedCutscenes[cutsceneIndex] = true;
+                gm.PlaySFX(gm.gm_gameSfx.uiSfx[Random.Range(3, 6)]);
+                gm.SetCutsceneDialog(InsertLineBreaks(dialog[i]));
+                yield return new WaitForSeconds(2.65f);
+                gm.SetCutsceneDialog("");
+                yield return new WaitForSeconds(0.5f);
             }
+
+            //gm.gm_gameSaveData.playedCutscenes[cutsceneIndex] = true;
+        }
+
+        if(isEnd)
+        {
+            gm.SetTitleScreenDepth(3);
+            GetComponentInChildren<Animator>().Play("RatKingGrow");
+            yield return new WaitForSeconds(8.5f);
         }
 
         while (gm.gm_gameVars.isLoadingLevel)
             yield return null;
 
         LoadNextLevel();
+        gm.StopMusic();
+    }
+
+    public void PlayChewingSound()
+    {
+        gm.StopMusic();
+        gm.PlaySFX(gm.gm_gameSfx.generalSfx[7]);
     }
 
     string InsertLineBreaks(string s)

@@ -130,6 +130,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1390234478948471098, guid: a5f15a5893dc0954fbec3f1fcc56c6e1, type: 3}
+      propertyPath: levelSelectButtons.Array.size
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 1390234479201084658, guid: a5f15a5893dc0954fbec3f1fcc56c6e1, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0

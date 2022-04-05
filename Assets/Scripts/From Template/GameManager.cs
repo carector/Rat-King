@@ -286,7 +286,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            if (musicSource.clip != gm_gameSfx.musicTracks[0])
+            if (musicSource.clip != gm_gameSfx.musicTracks[0] && musicSource.clip != gm_gameSfx.musicTracks[5])
                 musicSource.Stop();
 
             gameOverPopupAnimator.Play("GameOverPopup_Default", 0, 0);
@@ -637,7 +637,7 @@ public class GameManager : MonoBehaviour
 
     public void UpdateUnlockedLevels()
     {
-        for (int i = 0; i <= gm_gameSaveData.furthestUnlockedLevel; i++)
+        for (int i = 0; i <= Mathf.Clamp(gm_gameSaveData.furthestUnlockedLevel, 0, levelSelectButtons.Count-1); i++)
         {
             levelSelectButtons[i].interactable = true;
 
