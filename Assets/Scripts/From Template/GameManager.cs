@@ -112,6 +112,15 @@ public class GameManager : MonoBehaviour
         GetReferences();
         ReadSaveData();
 
+        /*
+        if (PlayerPrefs.HasKey("FURTHEST_UNLOCKED_LEVEL"))
+            gm_gameSaveData.furthestUnlockedLevel = PlayerPrefs.GetInt("FURTHEST_UNLOCKED_LEVEL");
+        else
+        {
+            PlayerPrefs.SetInt("FURTHEST_UNLOCKED_LEVEL", 0);
+            PlayerPrefs.Save();
+        }*/
+
         if (gm_gameSaveData.playedCutscenes.Length == 0)
             gm_gameSaveData.playedCutscenes = new bool[3];
 
@@ -143,7 +152,7 @@ public class GameManager : MonoBehaviour
         if (gm_gameRefs.currentLevel != null)
         {
             // Pause toggle
-            if (Input.GetKeyDown(KeyCode.Escape) && !gm_gameRefs.currentLevel.levelOver && !gm_gameVars.isLoadingLevel)
+            if (Input.GetKeyDown(KeyCode.Escape) && !gm_gameRefs.currentLevel.levelOver && !gm_gameVars.isLoadingLevel && gm_gameVars.activeUIScreen == UIScreen.inGame)
             {
                 SetPausedState(!gm_gameVars.gamePaused);
             }
@@ -350,13 +359,18 @@ public class GameManager : MonoBehaviour
 
     public void UnlockNextLevel()
     {
-        gm_gameSaveData.furthestUnlockedLevel++;
-        WriteSaveData();
+        if (SceneManager.GetActiveScene().buildIndex-3 == gm_gameSaveData.furthestUnlockedLevel)
+        {
+            gm_gameSaveData.furthestUnlockedLevel++;
+            WriteSaveData();
+            //PlayerPrefs.SetInt("FURTHEST_UNLOCKED_LEVEL", gm_gameSaveData.furthestUnlockedLevel);
+            //PlayerPrefs.Save();
+        }
     }
 
     void ReadSaveData()
     {
-        string prefix = @"idbfs/" + Application.productName;
+        string prefix = @"idbfs/RatKing";
 
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             prefix = Application.persistentDataPath;
@@ -551,6 +565,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            gm_gameRefs.eventSystem.SetSelectedGameObject(null); // Deselect buttons
             SetActiveUIScreen(0);
         }
     }
@@ -582,7 +597,12 @@ public class GameManager : MonoBehaviour
         if (ply.p_states.dead || gm_gameVars.gamePaused)
             LoadLevel(SceneManager.GetActiveScene().buildIndex);
         else
-            LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+        {
+            if(gm_gameRefs.currentLevel.customLevelIndex != 0)
+                LoadLevel(gm_gameRefs.currentLevel.customLevelIndex);
+            else
+                LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+        }
     }
     public void QuitToTitle()
     {
@@ -601,6 +621,7 @@ public class GameManager : MonoBehaviour
 
         PlayerPrefs.SetInt("AMB_VOLUME", volume);
         gm_gameRefs.mixer.SetFloat("AmbienceVolume", volume);
+        PlayerPrefs.Save();
     }
     public void UpdateMusicVolume()
     {
@@ -614,6 +635,7 @@ public class GameManager : MonoBehaviour
 
         PlayerPrefs.SetInt("MUS_VOLUME", volume);
         gm_gameRefs.mixer.SetFloat("MusicVolume", volume);
+        PlayerPrefs.Save();
     }
     public void UpdateSFXVolume()
     {
@@ -627,6 +649,7 @@ public class GameManager : MonoBehaviour
 
         PlayerPrefs.SetInt("SFX_VOLUME", volume);
         gm_gameRefs.mixer.SetFloat("SFXVolume", volume);
+        PlayerPrefs.Save();
 
         if (initialized)
         {
@@ -637,7 +660,9 @@ public class GameManager : MonoBehaviour
 
     public void UpdateUnlockedLevels()
     {
-        for (int i = 0; i <= Mathf.Clamp(gm_gameSaveData.furthestUnlockedLevel, 0, levelSelectButtons.Count-1); i++)
+        int count = Mathf.Min(gm_gameSaveData.furthestUnlockedLevel, levelSelectButtons.Count - 1);
+
+        for (int i = 0; i <= count; i++)
         {
             levelSelectButtons[i].interactable = true;
 
@@ -647,8 +672,8 @@ public class GameManager : MonoBehaviour
 
     void WriteSaveData()
     {
-        // Reason for idbfs prefix: https://itch.io/t/140214/persistent-data-in-updatable-webgl-games (don't question it)
-        string prefix = @"idbfs/" + Application.productName;
+        // Reason for idbfs prefix: https://itch.io/t/140214/persistent-data-in-updatable-webgl-games (don't question it) (it does not work anymore)
+        string prefix = @"idbfs/RatKing";
 
         if (Application.platform == RuntimePlatform.WindowsPlayer || Application.platform == RuntimePlatform.WindowsEditor)
             prefix = Application.persistentDataPath;

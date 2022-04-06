@@ -10,7 +10,7 @@ public class ConveyerBelt : MonoBehaviour
 
     PlayerController ply;
     SackScript sack;
-    List<Collider2D> cols;
+    public List<Collider2D> cols;
 
     // Start is called before the first frame update
     void Start()
@@ -46,6 +46,8 @@ public class ConveyerBelt : MonoBehaviour
             if (sack == null)
                 sack = FindObjectOfType<SackScript>();
             grounded = sack.grounded;
+            if (sack.grounded)
+                sack.carriedByBelt = true;
             t = other;
         }
 
@@ -62,7 +64,16 @@ public class ConveyerBelt : MonoBehaviour
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if ((other.tag == "Player" || other.tag == "Sack") && cols.Contains(other))
-            cols.Remove(other);
+        print("HERE");
+        if ((other.tag == "Player" || other.tag == "Sack"))
+        {
+            if (sack != null && other.tag == "Sack")
+            {
+                sack.carriedByBelt = false;
+                print("Uh huh");
+            }
+            if(cols.Contains(other))
+                cols.Remove(other);
+        }
     }
 }

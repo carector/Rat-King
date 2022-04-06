@@ -40,12 +40,14 @@ public class PressurePlate : MonoBehaviour
     bool CheckIfPressed()
     {
         bool p = false;
-        Collider2D[] cols = Physics2D.OverlapBoxAll(transform.position + Vector3.up * 2, new Vector2(1.5f, 5), 0);
+        Collider2D[] cols = Physics2D.OverlapBoxAll(transform.position + transform.up * 2, new Vector2(1.5f, 4.5f), 0);
         foreach (Collider2D other in cols)
         {
             if (other.tag == "Player")
             {
-                if (ply.p_states.grounded)
+                if (ply.p_states.grounded && transform.up.normalized == Vector3.up)
+                    p = true;
+                else if (transform.up.normalized == Vector3.down && Vector2.Distance(transform.position, other.transform.position) < 1f)
                     p = true;
             }
             if (other.tag == "Sack")
@@ -56,10 +58,15 @@ public class PressurePlate : MonoBehaviour
                     sackRb = sack.GetComponent<Rigidbody2D>();
                 }
 
-                if (!sack.grounded)
-                    sackRb.velocity = Vector2.MoveTowards(sackRb.velocity, new Vector2(0, sackRb.velocity.y), 0.1f);
+                if (!sack.grounded && !pressed)
+                    sackRb.velocity = Vector2.MoveTowards(sackRb.velocity, new Vector2(0, sackRb.velocity.y), Mathf.Clamp(0.75f / Mathf.Abs(transform.position.x - other.transform.position.x), 0, 0.66f));
                 else
-                    p = true;
+                {
+                    if (sack.grounded && !sack.carriedByBelt && transform.up.normalized == Vector3.up)
+                        p = true;
+                    else if (transform.up.normalized == Vector3.down && Vector2.Distance(transform.position, other.transform.position) < 1f)
+                        p = true;
+                }
             }
             if (p == true)
                 break;

@@ -15,6 +15,7 @@ public class SackScript : MonoBehaviour
     GameManager gm;
 
     public bool grounded;
+    public bool carriedByBelt;
     public bool movingThroughChute;
     bool impactDelayInProgress;
 

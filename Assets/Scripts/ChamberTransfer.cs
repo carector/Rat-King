@@ -33,7 +33,7 @@ public class ChamberTransfer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (inBounds && canEnter && Input.GetKeyDown(KeyCode.W) && !lm.levelOver && !playingIntroAnimation && !(isExit && lm.points + ply.p_sackVars.heldCivilians >= lm.requiredPoints && !ply.p_sackVars.holdingSack))
+        if (inBounds && canEnter && Input.GetKeyDown(KeyCode.W) && !lm.levelOver && !playingIntroAnimation && !(isExit && lm.points + ply.p_sackVars.heldCivilians >= lm.requiredPoints && ply.p_sackVars.spawnedSack != null && !ply.p_sackVars.spawnedSack.grounded))
         {
             if (isExit)
             {

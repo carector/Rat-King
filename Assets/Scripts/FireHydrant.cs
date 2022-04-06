@@ -8,10 +8,12 @@ public class FireHydrant : MonoBehaviour
     public float force = 20;
     Rigidbody2D prb;
     Rigidbody2D sackRb;
+    PlayerController ply;
 
     // Start is called before the first frame update
     void Start()
     {
+        ply = FindObjectOfType<PlayerController>();
         prb = FindObjectOfType<PlayerController>().GetComponent<Rigidbody2D>();
     }
 
@@ -25,9 +27,8 @@ public class FireHydrant : MonoBehaviour
     {
         if (active)
         {
-            if (other.tag == "Player")
+            if (other.tag == "Player" && !ply.p_states.dead)
             {
-                print("AddingForce");
                 prb.AddForce((Vector2.up * force) / Vector2.Distance(transform.position, prb.transform.position));
             }
             if (other.tag == "Sack")

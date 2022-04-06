@@ -1,7 +1,32 @@
 Before releasing:
 
+//? Check layers of tiled levels
+// Center blocks in level 2
+// Fix bug where you can lock yourself out of a room if you're on the final sacrifice (make it check if bag is grounded)
+// Fix ceiling button from being activated from above (increased sack magnesis when over plate)
+// Update animators on civilians so they aren't all Thomas
+// Make sure all terrain is marked with "ground" physmat
+
+//? Add backgrounds to remaining cutscenes
+//? Move quit button offscreen so it doesn't appear in web build
+// Add massive killtriggers below all levels
+// Add cutscene background to other 2 cutscenes
+// Fix volume sliders to not blast your ears
+- Fix level saving
+// Fix "ACOLYTE" typo
+//? Deselect settings button so you don't press it when hitting spacebar
+//? Fire hydrants can carry dead body
+//? Adjust fire hydrant position
+// Tweak added velocity when throwing sack
+// Hide aiming nodes if died while aiming
+//? Fix bug where you can resume game while settings screen is open
+
+BUILD CHECK (CHECK THESE EVERY TIME)
 - Remove all singletons from all levels but first
-- Make sure all terrain is marked with "ground" physmat
-- Check for any TEMP code
-- Move quit button offscreen
-- Add massive killtriggers below all levels
+- Check and remove any TEMP code
+
+Future QoL fixes + easy to add mechanics:
+- Weighted buttons that require you to hold a certain number of guys to activate
+- Screen transition + UI transitions
+- Sound effects for remaining mechanics
+- Have HUD move upwards if you move your mouse towards top of screen while aiming

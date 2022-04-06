@@ -170,6 +170,7 @@ MonoBehaviour:
   playOnStart: 1
   isEnd: 0
   cutsceneIndex: 1
+  nextScene: 7
   dialog:
   - THE SINEW IS WET AND GUMMY
   - AND INSUBSTANTIAL

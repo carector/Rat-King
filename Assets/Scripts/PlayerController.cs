@@ -89,6 +89,10 @@ public class PlayerController : MonoBehaviour
         bodySprite.sortingOrder = 200;
         rb.velocity = Vector2.up * p_movement.jumpForce/2;
         GetComponent<CircleCollider2D>().enabled = false;
+        for (int i = 0; i < 8; i++)
+        {
+            aimNodes[i].color = Color.clear;
+        }
         StartCoroutine(DieSequence());
     }
 
@@ -239,7 +243,7 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) && p_states.grounded)
             Jump();
 
-        if (!p_states.showingSackContents && p_sackVars.holdingSack && p_sackVars.heldCivilians > 0)
+        if (!p_states.showingSackContents && p_sackVars.holdingSack && p_sackVars.heldCivilians > 0 && !p_states.dead)
         {
             if (Input.GetMouseButton(0))
                 DisplayAimingLine(true);

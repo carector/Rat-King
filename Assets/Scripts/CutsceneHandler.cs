@@ -8,6 +8,7 @@ public class CutsceneHandler : MonoBehaviour
     public bool playOnStart = true;
     public bool isEnd;
     public int cutsceneIndex;
+    public int nextScene;
     public string[] dialog;
 
     GameManager gm;
@@ -50,9 +51,12 @@ public class CutsceneHandler : MonoBehaviour
     {
         gm.StopMusic();
         if (isEnd)
+        {
+            gm.SetTitleScreenDepth(3);
             gm.LoadLevel(2);
+        }
         else
-            gm.LoadLevel(SceneManager.GetActiveScene().buildIndex + 1);
+            gm.LoadLevel(nextScene);
     }
 
     IEnumerator DisplayCutsceneText()

@@ -12,6 +12,7 @@ public class LevelManager : MonoBehaviour
     public bool timerRunning;
     public float startingTime = 30;
     public float runtime;
+    public int customLevelIndex;
 
     public Transform chamberCenter;
 

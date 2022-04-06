@@ -170,6 +170,7 @@ MonoBehaviour:
   playOnStart: 1
   isEnd: 0
   cutsceneIndex: 0
+  nextScene: 3
   dialog:
   - ACOLYTE
   - THE US THAT I AM HUNGERS
