@@ -247,12 +247,14 @@ public class PlayerController : MonoBehaviour
         {
             if (Input.GetMouseButton(0))
                 DisplayAimingLine(true);
-            else if (Input.GetMouseButtonUp(0))
+            else
             {
                 DisplayAimingLine(false);
-                ThrowSack();
+                if (Input.GetMouseButtonUp(0))
+                    ThrowSack();
             }
         }
+        else DisplayAimingLine(false);
 
         Collider2D[] hits = ScanForInteractions();
         for (int i = 0; i < hits.Length; i++)

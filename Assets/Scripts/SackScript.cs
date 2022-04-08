@@ -56,7 +56,7 @@ public class SackScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position + Vector3.down, 0.35f, Vector2.down, 0.25f, ~(1 << 7));
+        RaycastHit2D[] hits = Physics2D.CircleCastAll(transform.position + Vector3.down, 0.2f, Vector2.down, 0.25f, ~(1 << 7));
         Debug.DrawRay(transform.position + Vector3.down, Vector2.down * 0.25f, Color.red, Time.deltaTime);
         foreach (RaycastHit2D hit in hits)
         {

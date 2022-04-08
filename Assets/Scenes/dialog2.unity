@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 869500056}
   - component: {fileID: 869500058}
   - component: {fileID: 869500057}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: RatKing
   m_TagString: Untagged
   m_Icon: {fileID: 0}

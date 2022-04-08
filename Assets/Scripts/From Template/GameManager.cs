@@ -68,6 +68,7 @@ public class GameManager : MonoBehaviour
 
     // UI references
     Transform titleArt;
+    Transform cutsceneArt;
     RectTransform titleScreenPanel;
     RectTransform settingsPanel;
     RectTransform hudPanel;
@@ -149,6 +150,10 @@ public class GameManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F4))
             SetFullscreenMode(!Screen.fullScreen);
 
+        //if (Input.GetKeyDown(KeyCode.Alpha9)) // TEMP TEMP TEMP
+           // SetTitleScreenDepth(5);
+
+
         if (gm_gameRefs.currentLevel != null)
         {
             // Pause toggle
@@ -200,6 +205,7 @@ public class GameManager : MonoBehaviour
 
         // UI references
         titleArt = GameObject.Find("TitleArt").transform;
+        cutsceneArt = GameObject.Find("CutsceneBG").transform;
         blackScreenOverlay = GameObject.Find("BlackScreenOverlay").GetComponent<Image>();
         sfxSlider = GameObject.Find("SFXVolumeSlider").GetComponent<Slider>();
         ambSlider = GameObject.Find("AmbienceVolumeSlider").GetComponent<Slider>();
@@ -448,8 +454,8 @@ public class GameManager : MonoBehaviour
                         quitMenu.anchoredPosition = Vector2.zero;
                         break;
                 }
-
-                if (gm_gameVars.titleScreenDepth == 0)
+                cutsceneArt.localPosition = new Vector3(-100, 0, 20);
+                if (gm_gameVars.titleScreenDepth == 0 || gm_gameVars.titleScreenDepth == 5)
                     titleArt.localPosition = new Vector3(0, 0, 20);
                 else
                     titleArt.localPosition = new Vector3(-100, 0, 20);
@@ -458,6 +464,7 @@ public class GameManager : MonoBehaviour
 
             case UIScreen.settings:
                 titleArt.localPosition = new Vector3(-100, 0, 20);
+                cutsceneArt.localPosition = new Vector3(-100, 0, 20);
                 cutscenePanel.anchoredPosition = Vector2.up * 1000;
                 settingsPanel.anchoredPosition = Vector2.zero;
                 hudPanel.anchoredPosition = Vector2.up * 1000;
@@ -466,6 +473,7 @@ public class GameManager : MonoBehaviour
 
             case UIScreen.cutscene:
                 titleArt.localPosition = new Vector3(-100, 0, 20);
+                cutsceneArt.localPosition = new Vector3(0, 0, 20);
                 cutscenePanel.anchoredPosition = Vector2.zero;
                 settingsPanel.anchoredPosition = Vector2.up * 1000;
                 hudPanel.anchoredPosition = Vector2.up * 1000;
@@ -474,6 +482,7 @@ public class GameManager : MonoBehaviour
 
             case UIScreen.inGame:
                 titleArt.localPosition = new Vector3(-100, 0, 20);
+                cutsceneArt.localPosition = new Vector3(-100, 0, 20);
                 cutscenePanel.anchoredPosition = Vector2.up * 1000;
                 hudPanel.anchoredPosition = Vector2.zero;
                 settingsPanel.anchoredPosition = Vector2.up * 1000;

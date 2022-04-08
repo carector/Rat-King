@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7429029531561464199}
   - component: {fileID: 1286999960958850617}
-  m_Layer: 0
+  m_Layer: 5
   m_Name: CutsceneBG
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -25,11 +25,11 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 334250980619438295}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -512, y: -360, z: 10}
+  m_LocalPosition: {x: -39.75, y: 0, z: 20}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 2250133671855349875}
-  m_RootOrder: 2
+  m_Father: {fileID: 1390234479026495153}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1286999960958850617
 SpriteRenderer:
@@ -940,7 +940,7 @@ RectTransform:
   m_Children:
   - {fileID: 2250133671855349875}
   m_Father: {fileID: 8187792438708019701}
-  m_RootOrder: 1
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1903,6 +1903,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3449330782212017648}
+  - {fileID: 7429029531561464199}
   m_Father: {fileID: 1390234479548810630}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2817,7 +2818,7 @@ RectTransform:
   m_Children:
   - {fileID: 8187792439780682365}
   m_Father: {fileID: 8187792438708019701}
-  m_RootOrder: 2
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3769,7 +3770,6 @@ RectTransform:
   m_Children:
   - {fileID: 3624919791688434597}
   - {fileID: 1850242815575230550}
-  - {fileID: 7429029531561464199}
   m_Father: {fileID: 5638978944131082337}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -6300,7 +6300,7 @@ RectTransform:
   m_Children:
   - {fileID: 3198696736212110063}
   m_Father: {fileID: 8187792438708019701}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -11273,8 +11273,8 @@ SpriteRenderer:
   m_AutoUVMaxDistance: 0.5
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
-  m_SortingLayerID: 0
-  m_SortingLayer: 0
+  m_SortingLayerID: 1046983185
+  m_SortingLayer: -1
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 5c18f6590f39ba54da08b184f731714c, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -13514,9 +13514,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 3198696736142815722}
-  - {fileID: 5638978944131082337}
   - {fileID: 1390234480573581607}
   - {fileID: 3198696734697743620}
+  - {fileID: 5638978944131082337}
   - {fileID: 8187792439967133239}
   - {fileID: 2965145594541542625}
   m_Father: {fileID: 1390234479545358742}
