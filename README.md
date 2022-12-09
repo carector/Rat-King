@@ -4,6 +4,8 @@ A cartoony occult platformer where you race against time to deliver human sacrif
 
 We hope to update the game in the future with more levels and gameplay improvements.
 
+You can play the game [here.](https://the-mountain.itch.io/rat-king)
+
 # Screenshots
 ![rat1](https://user-images.githubusercontent.com/25966180/206601924-260f936e-dfa7-4f0f-8aaf-be0a2ef414c4.png)
 ![rat2](https://user-images.githubusercontent.com/25966180/206601935-ab985ee5-64db-47e1-ab0a-e2318a716ebc.png)
