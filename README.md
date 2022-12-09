@@ -1,6 +1,6 @@
 ![image](https://user-images.githubusercontent.com/25966180/206600944-e4daba17-9ca8-47a5-aeb5-c3e770b5394b.png)
 
-A cartoony occult platformer where you race against time to deliver human sacrifices. Originally developed for [Ludum Dare 50,](https://ldjam.com/events/ludum-dare/50/rat-king) the game ranked in the top 50 of all submission for the jam.
+A cartoony occult platformer where you race against time to deliver human sacrifices. Originally developed for [Ludum Dare 50,](https://ldjam.com/events/ludum-dare/50/rat-king) the game ranked in the top 50 of all submissions for the jam.
 
 We hope to update the game in the future with more levels and gameplay improvements.
 
