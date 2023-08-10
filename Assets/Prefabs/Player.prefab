@@ -442,7 +442,7 @@ GameObject:
   - component: {fileID: 4587752863682388188}
   - component: {fileID: 4587752863682388191}
   - component: {fileID: 4587752863682388189}
-  - component: {fileID: 4587752863682388178}
+  - component: {fileID: 1873460046159930465}
   m_Layer: 6
   m_Name: Player
   m_TagString: Player
@@ -503,6 +503,20 @@ MonoBehaviour:
     victory: 0
     showingSackContents: 0
     facingDirection: 1
+  handTransformHolder: {fileID: 2362667543069960922}
+  handTransform: {fileID: 5107251266756234115}
+  aimNodes:
+  - {fileID: 4587752864981682818}
+  - {fileID: 4587752864351753407}
+  - {fileID: 4587752863004859873}
+  - {fileID: 4587752864384401806}
+  - {fileID: 4587752864802003255}
+  - {fileID: 4587752862960206087}
+  - {fileID: 4587752863587550645}
+  - {fileID: 4587752864169960804}
+  rb: {fileID: 4587752863682388189}
+  bodySprite: {fileID: 4587752863102478734}
+  bodyAnimator: {fileID: 4587752863549895582}
   mousePosition: {x: 0, y: 0}
 --- !u!70 &4587752863682388191
 CapsuleCollider2D:
@@ -541,8 +555,8 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 4
---- !u!58 &4587752863682388178
-CircleCollider2D:
+--- !u!61 &1873460046159930465
+BoxCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -550,13 +564,23 @@ CircleCollider2D:
   m_GameObject: {fileID: 4587752863682388185}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 1376cd2380c7c644b9e0ef36fb08dde6, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: -0.09186411}
+  m_Offset: {x: 0.05, y: -0.05}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
   serializedVersion: 2
-  m_Radius: 0.9081359
+  m_Size: {x: 1.9, y: 1.9}
+  m_EdgeRadius: 0
 --- !u!1 &4587752864146298113
 GameObject:
   m_ObjectHideFlags: 0

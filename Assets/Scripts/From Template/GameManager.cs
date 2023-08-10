@@ -10,6 +10,21 @@ using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour
 {
+    private static GameManager _i;
+    public static GameManager i { get { return _i; } }
+    private void Awake()
+    {
+        if (_i != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
+
+        _i = this;
+        DontDestroyOnLoad(transform.parent);
+    }
+
+
     public enum UIScreen
     {
         titleScreen,

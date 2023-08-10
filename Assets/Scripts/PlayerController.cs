@@ -5,6 +5,9 @@ using System.Linq;
 
 public class PlayerController : MonoBehaviour
 {
+    private static PlayerController _i;
+    public static PlayerController i { get { return _i; } }
+
     [System.Serializable]
     public class PlayerMovement
     {
@@ -44,47 +47,48 @@ public class PlayerController : MonoBehaviour
     public SackVariables p_sackVars;
     public PlayerStates p_states;
 
+    [Header("References")]
+    [SerializeField]
     Transform handTransformHolder;
+    [SerializeField]
     Transform handTransform;
-    Transform grabbedCivilian;
+    [SerializeField]
     SpriteRenderer[] aimNodes;
+    [SerializeField]
     Rigidbody2D rb;
-    GameManager gm;
+    [SerializeField]
     SpriteRenderer bodySprite;
+    [SerializeField]
     Animator bodyAnimator;
+
     Vector2 lastPosition;
+    Transform grabbedCivilian;
 
-    public Vector2 mousePosition;
+    public Vector3 mousePosition;
 
-    // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
-        gm = FindObjectOfType<GameManager>();
-        rb = GetComponent<Rigidbody2D>();
-        bodyAnimator = transform.GetChild(0).GetComponent<Animator>();
-        bodySprite = bodyAnimator.transform.GetChild(0).GetComponent<SpriteRenderer>();
-        handTransformHolder = bodySprite.transform.GetChild(0);
-        handTransform = handTransformHolder.GetChild(0);
+        if(_i != null)
+        {
+            Destroy(this.gameObject);
+            return;
+        }
 
-        aimNodes = new SpriteRenderer[8];
-        Transform nodeParent = GameObject.Find("AimNodesHolder").transform;
-        for (int i = 0; i < 8; i++)
-            aimNodes[i] = nodeParent.GetChild(i).GetComponent<SpriteRenderer>();
-
+        _i = this;
         DisplayAimingLine(false);
         lastPosition = transform.position;
     }
 
     bool CanMove()
     {
-        return p_states.canMove && !p_states.throwing && !p_states.grabbing && !p_states.dead && !gm.gm_gameVars.gamePaused;
+        return p_states.canMove && !p_states.throwing && !p_states.grabbing && !p_states.dead && !GameManager.i.gm_gameVars.gamePaused;
     }
 
     public void Die()
     {
         p_states.dead = true;
-        gm.CheckAndPlayClip("Player_Die", bodyAnimator);
-        gm.PlaySFX(gm.gm_gameSfx.playerSfx[7]);
+        GameManager.i.CheckAndPlayClip("Player_Die", bodyAnimator);
+        GameManager.i.PlaySFX(GameManager.i.gm_gameSfx.playerSfx[7]);
         bodySprite.sortingLayerName = "Foreground";
         bodySprite.sortingOrder = 200;
         rb.velocity = Vector2.up * p_movement.jumpForce/2;
@@ -201,7 +205,7 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        gm.CheckAndPlayClip(clipName, bodyAnimator);
+        GameManager.i.CheckAndPlayClip(clipName, bodyAnimator);
         lastPosition = transform.position;
     }
 
@@ -267,8 +271,8 @@ public class PlayerController : MonoBehaviour
                 if (p_sackVars.heldCivilians == 0)
                     grabClip += "Empty";
                 grabClip += "Sack";
-                gm.CheckAndPlayClip(grabClip, bodyAnimator);
-                gm.PlaySFX(gm.gm_gameSfx.playerSfx[5]);
+                GameManager.i.CheckAndPlayClip(grabClip, bodyAnimator);
+                GameManager.i.PlaySFX(GameManager.i.gm_gameSfx.playerSfx[5]);
                 p_states.grabbing = true;
                 break;
             }
@@ -284,16 +288,16 @@ public class PlayerController : MonoBehaviour
 
     void ThrowSack()
     {
-        Vector2 vertex = ((Vector2)transform.position + mousePosition) / 2;
+        Vector2 vertex = (transform.position + mousePosition) * 0.5f;
         vertex.y += 6;
         Vector2 vel = (BezierPoint(transform.position, mousePosition, vertex, 0.1f) - (Vector2)transform.position) * 15;
 
-        gm.PlaySFX(gm.gm_gameSfx.playerSfx[4]);
+        GameManager.i.PlaySFX(GameManager.i.gm_gameSfx.playerSfx[4]);
         p_sackVars.spawnedSack = Instantiate(p_sackVars.sackObjectPrefab, transform.position, Quaternion.identity).GetComponent<SackScript>();
         p_sackVars.spawnedSack.Initialize(vel + Vector2.up * rb.velocity.y);
         p_sackVars.holdingSack = false;
         p_states.throwing = true;
-        gm.CheckAndPlayClip("Player_Throw", bodyAnimator);
+        GameManager.i.CheckAndPlayClip("Player_Throw", bodyAnimator);
     }
 
     public void FinishThrowingAnimation()
@@ -328,7 +332,7 @@ public class PlayerController : MonoBehaviour
         if (p_sackVars.holdingSack)
             index = p_sackVars.heldCivilians;
 
-        gm.PlaySFX(gm.gm_gameSfx.playerSfx[index]);
+        GameManager.i.PlaySFX(GameManager.i.gm_gameSfx.playerSfx[index]);
         rb.velocity = new Vector2(rb.velocity.x, p_movement.jumpForce / (1 + ((rb.mass - 1) / 4.5f)));
         p_states.jumping = true;
     }
@@ -338,7 +342,7 @@ public class PlayerController : MonoBehaviour
         Color c = Color.white;
         if (!visible)
             c = Color.clear;
-        Vector2 vertex = ((Vector2)transform.position + mousePosition) / 2;
+        Vector2 vertex = (transform.position + mousePosition) * 0.5f;
         vertex.y += 6;
 
         for (int i = 0; i < 8; i++)
